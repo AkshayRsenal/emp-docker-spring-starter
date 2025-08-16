@@ -1,0 +1,87 @@
+# version: '3.89'
+
+services:
+  app:
+    build: .
+    container_name: 'checkout-emp-sys'
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      db:
+       condition: service_healthy
+    networks:
+      - spring-net
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - .env
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - spring-net
+
+volumes:
+  mysql-data:
+
+networks:
+  spring-net:
+
+
+    # environment:
+    # - MYSQL_ROOT_PASSWORD:${EMP_SYS_DB_USERNAME}
+    # - MYSQL_ROOT_PASSWORD:${EMP_SYS_DB_USERNAME}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  #   services:
+  # app:
+  #   image: 'docker-spring-boot-postgres:latest'
+  #   build:
+  #     context: .
+  #   container_name: app
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - POSTGRES_USER=$YOUR_USERNAME
+  #     - POSTGRES_PASSWORD=$YOUR_PASSWORD
+  #     - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/$YOUR_DB_NAME
+  #     - SPRING_DATASOURCE_USERNAME=$YOUR_USERNAME
+  #     - SPRING_DATASOURCE_PASSWORD=$YOUR_PASSWORD
+  #     - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  #   ports:
+  #     - "$LOCAL_PORT:$DOCKER_PORT"
+
+  # db:
+  #   image: postgres
+  #   container_name: db
+  #   environment:
+  #     - POSTGRES_USER=$YOUR_USERNAME
+  #     - POSTGRES_PASSWORD=$YOUR_PASSWORD
+  #     - POSTGRES_DB=$YOUR_DB_NAME
+  #   ports:
+  #     - "$LOCAL_PORT:$DOCKER_PORT"
